@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>TOEFL Task 2 – Academic Discussion Trainer (Vanilla)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🗣️</span>
+      <strong>TOEFL Task 2 — Academic Discussion Trainer</strong>
+      <span class="hint">Word Bank + Karaoke + Full Response (EN→ID Gloss)</span>
+    </div>
+    <div class="controls">
+      <div class="timer">
+        <span id="clock">10:00</span>
+        <button id="startPauseBtn" class="btn icon" title="Start/Pause">▶</button>
+        <button id="resetBtn" class="btn icon" title="Reset">⟳</button>
+      </div>
+      <button class="btn ghost preset" data-min="10">10′</button>
+      <button class="btn ghost preset" data-min="7">7′</button>
+      <button class="btn ghost preset" data-min="5">5′</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 1) WORD BANK TRAINER -->
+    <section class="card">
+      <div class="card-head">
+        <h3>🔤 Word Bank Typing Trainer + ID Gloss</h3>
+        <p>Ketik tepat → <b class="warn">merah jika salah</b>, <b class="ok">hijau jika benar</b>. Enter = cek (atau auto-next aktif).</p>
+      </div>
+
+      <div class="row wrap gap">
+        <label class="inline">
+          Set
+          <select id="wbSet" class="input">
+            <option value="all">All (combine)</option>
+            <option value="opinion">Opinion</option>
+            <option value="reason">Reason</option>
+            <option value="example">Example</option>
+            <option value="counterpoint">Counterpoint</option>
+            <option value="conclusion">Conclusion</option>
+            <option value="connectors">Extra connectors</option>
+          </select>
+        </label>
+
+        <label class="inline">
+          Practice
+          <select id="wbField" class="input" title="Choose what to type">
+            <option value="en">Word</option>
+            <option value="pos">Letak (template)</option>
+            <option value="ex">Contoh (example)</option>
+            <option value="cycle">Cycle (Word → Letak → Contoh)</option>
+          </select>
+        </label>
+
+        <label class="inline">
+          <input type="checkbox" id="wbCase" checked />
+          Case-insensitive
+        </label>
+
+        <label class="inline">
+          <input type="checkbox" id="wbAuto" checked />
+          Auto-next
+        </label>
+
+        <button id="wbShuffle" class="btn ghost">Shuffle</button>
+        <button id="wbReset" class="btn ghost">Reset</button>
+      </div>
+
+      <div class="wb-typing">
+        <div class="tag" id="wbTarget">In my opinion</div>
+        <input id="wbInput" class="wb-input" placeholder="Type the word exactly..." autocomplete="off" />
+      </div>
+
+      <div class="wb-gloss mono mini">
+        <div><b>Arti (ID):</b> <span id="wbArti">—</span></div>
+        <div><b>Letak di template:</b> <span id="wbPos">—</span></div>
+        <div><b>Contoh:</b> <span id="wbExample">—</span></div>
+      </div>
+
+      <div class="grid stats">
+        <div class="stat"><div>Index</div><strong id="wbIndex">1/10</strong></div>
+        <div class="stat"><div>Correct</div><strong id="wbCorrect">0</strong></div>
+        <div class="stat"><div>Mistakes</div><strong id="wbMistakes">0</strong></div>
+        <div class="stat"><div>Streak</div><strong id="wbStreak">0</strong></div>
+      </div>
+    </section>
+
+    <!-- 2) KARAOKE DRILL -->
+    <section class="card">
+      <div class="card-head">
+        <h3>🎤 Karaoke Drill Mode</h3>
+        <p>Latih **struktur universal**: Opinion → Reason → Example → Counterpoint → Conclusion.</p>
+      </div>
+
+      <div class="row wrap gap">
+        <label class="inline">
+          Section
+          <select id="secSelect" class="input">
+            <option value="all">All (Opinion→Reason→Example→Counterpoint→Conclusion)</option>
+            <option value="opinion">Opinion</option>
+            <option value="reason">Reason</option>
+            <option value="example">Example</option>
+            <option value="counterpoint">Counterpoint</option>
+            <option value="conclusion">Conclusion</option>
+          </select>
+        </label>
+
+        <label class="inline">
+          Style
+          <select id="styleSelect" class="input">
+            <option value="simple">Simple</option>
+            <option value="easy">Easy to remember</option>
+            <option value="academic">Academic</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </label>
+
+        <label class="inline">
+          <input type="checkbox" id="showPunct" checked />
+          Show punctuation
+        </label>
+
+        <label class="inline">
+          <input type="checkbox" id="autoNextSec" checked />
+          Auto-next section
+        </label>
+
+        <button id="resetDrill" class="btn ghost">Reset Drill</button>
+      </div>
+
+      <div class="kara-wrap">
+        <div id="secTemplate" class="template mono"></div>
+        <textarea id="secTyped" class="kara-input" rows="4" placeholder="Type to match the template exactly."></textarea>
+      </div>
+
+      <div class="grid stats">
+        <div class="stat"><div>Progress</div><strong id="secProg">0%</strong></div>
+        <div class="stat"><div>Errors</div><strong id="secErr">0</strong></div>
+        <div class="stat"><div>Accuracy</div><strong id="secAcc">0%</strong></div>
+        <div class="stat"><div>WPM</div><strong id="secWpm">0</strong></div>
+      </div>
+      <div class="progress"><div id="secBar" class="bar" style="width:0%"></div></div>
+      <div class="mini muted">Hint: pilih Style, lalu ketik persis untuk bangun “muscle memory”.</div>
+    </section>
+
+    <!-- 3) FULL RESPONSE BUILDER -->
+    <section class="card">
+      <div class="card-head">
+        <h3>📄 Full Response Builder (5 Kalimat)</h3>
+        <p>Pilih <b>Side</b> + <b>Style</b> → auto generate Opinion→Reason→Example→Counterpoint→Conclusion. Copy atau kirim ke Karaoke (Custom).</p>
+      </div>
+
+      <div class="row wrap gap">
+        <label class="inline">
+          Side
+          <select id="sideSelect" class="input" title="Choose Claire/Paul">
+            <option value="paul">Paul — Future skills (long-term)</option>
+            <option value="claire">Claire — Current skills (short-term)</option>
+          </select>
+        </label>
+        <label class="inline">
+          Style
+          <select id="builderStyle" class="input">
+            <option value="simple">Simple</option>
+            <option value="easy">Easy</option>
+            <option value="academic">Academic</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </label>
+        <button id="buildBtn" class="btn">Build</button>
+        <button id="copyBuild" class="btn ghost">Copy</button>
+        <button id="useInKaraoke" class="btn ghost">Use in Karaoke (Custom)</button>
+      </div>
+
+      <textarea id="buildOut" class="kara-input mono" rows="8" placeholder="Your 5-sentence answer will appear here..."></textarea>
+      <div class="mini muted">Tips: sesuaikan contoh pekerjaan agar lebih personal (nurse/accountant/IT).</div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Built for Hilal — Pure Vanilla (no frameworks) • EN→ID Gloss • Task-2 pacing (10:00)
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
